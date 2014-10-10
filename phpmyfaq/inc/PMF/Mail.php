@@ -235,10 +235,14 @@ class PMF_Mail
     {
         // Set default value for public properties
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->agent       = 'built-in';
         $this->attachments = [];
 =======
         $this->agent       = $config->get( 'mail.remoteSMTP' ) == 'true' ? 'SwiftSMTP' : 'built-in';
+=======
+        $this->agent       = $config->get( 'mail.remoteSMTP' ) ? 'SwiftSMTP' : 'built-in';
+>>>>>>> c26faaa... Fixed config boolean read.
         $this->attachments = array();
 >>>>>>> 18366cd... Added PMF_Mail wrapper for SMTP
         $this->boundary    = self::createBoundary();

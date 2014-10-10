@@ -85,6 +85,7 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
             </div>
         </header>
 
+<<<<<<< HEAD
         <div class="row">
             <div class="col-lg-12">
 
@@ -160,6 +161,87 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
 
             </div>
         </div>
+=======
+        <div id="user_message"><?php echo $message; ?></div>
+        <form class="form-horizontal" id="config_list" name="config_list" accept-charset="utf-8"
+              action="?action=config&amp;config_action=saveConfig" method="post">
+            <input type="hidden" name="csrf" value="<?php echo $user->getCsrfTokenFromSession(); ?>">
+
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="Main">
+                    <i class="icon-home icon-white"></i>
+                    <?php echo $PMF_LANG['mainControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configMain" class="hide"></div>
+
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="Records">
+                    <i class="icon-th-list icon-white"></i>
+                    <?php echo $PMF_LANG['recordsControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configRecords" class="hide"></div>
+
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="Search">
+                    <i class="icon-search icon-white"></i>
+                    <?php echo $PMF_LANG['searchControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configSearch" class="hide"></div>
+
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="Security">
+                    <i class="icon-warning-sign icon-white"></i>
+                    <?php echo $PMF_LANG['securityControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configSecurity" class="hide"></div>
+
+            <p>
+                <button class="btn btn-inverse toggleConfig"  data-toggle="Spam">
+                    <i class="icon-thumbs-down icon-white"></i>
+                    <?php echo $PMF_LANG['spamControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configSpam" class="hide"></div>
+
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="SocialNetworks">
+                    <i class="icon-retweet icon-white"></i>
+                    <?php echo $PMF_LANG['socialNetworksControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configSocialNetworks" class="hide"></div>
+			
+            <p>
+                <button class="btn btn-inverse toggleConfig" data-toggle="Mail">
+                    <i class="icon-retweet icon-white"></i>
+                    <?php echo $PMF_LANG['mailControlCenter']; ?>
+                </button>
+            </p>
+            <div id="configMail" class="hide"></div>			
+
+            <!--
+            <p>
+                <a class="btn btn-inverse" onclick="javascript:toggleConfig('Cache');">
+                    <?php echo $PMF_LANG['cacheControlCenter']; ?>
+                </a>
+            </p>
+            <div id="configCache" class="hide"></div>
+            -->
+
+            <p>
+                <button class="btn btn-primary" type="submit">
+                    <?php echo $PMF_LANG['ad_config_save']; ?>
+                </button>
+                <button class="btn btn-warning" type="reset">
+                    <?php echo $PMF_LANG['ad_config_reset']; ?>
+                </button>
+            </p>
+        </form>
+>>>>>>> fbd274c... Added SMTP control to config.
 
         <script type="text/javascript">
             toggleConfig = function (e) {

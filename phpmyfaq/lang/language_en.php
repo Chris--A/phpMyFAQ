@@ -1185,6 +1185,7 @@ $PMF_LANG["msgAboutThisNews"] = "About this news";
 // added v.2.8.1 - 2013-06-23 by Thorsten
 $PMF_LANG["msgAccessDenied"] = "Access denied.";
 
+<<<<<<< HEAD
 // added v.2.9.0-alpha - 2013-12-26 by Thorsten
 $PMF_LANG["msgRelatedTags"] = 'Add Search Word';
 $PMF_LANG["msgPopularTags"] = 'Popular Search Words';
@@ -1214,3 +1215,11 @@ $PMF_LANG["msgMatchingQuestions"] = "The following results closely matched your 
 $PMF_LANG["msgFinishSubmission"] = "If none of the suggestions above match your question, click the button below to finish submitting your question.";
 $LANG_CONF["main.enableLinkVerification"] = array(0 => "checkbox", 1 => "Enable automatic link verification<br>(default: enabled)");
 $LANG_CONF['spam.manualActivation'] = array(0 => 'checkbox', 1 => 'Manually activate new users (default: activated)');
+=======
+// added v.2.8.15 - 2014-10-10 by Christopher Andrews ( Chris--A )
+$PMF_LANG['mailControlCenter'] = 'Mail setup';
+$LANG_CONF['mail.remoteSMTP'] = array(0 => 'checkbox', 1 => 'Use remote SMTP server (default: deactivated)');
+$LANG_CONF['mail.remoteSMTPServer'] = array(0 => 'input', 1 => 'Server address');
+$LANG_CONF['mail.remoteSMTPUsername'] = array(0 => 'input', 1 => 'User name');
+$LANG_CONF['mail.remoteSMTPPassword'] = array(0 => 'input', 1 => 'Password');
+>>>>>>> fbd274c... Added SMTP control to config.

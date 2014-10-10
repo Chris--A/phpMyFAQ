@@ -796,6 +796,16 @@ if ($step == 3) {
     if (version_compare($version, '2.8.0-beta3', '<')) {
         $faqConfig->add('main.enableGravatarSupport', 'false');
     }
+    
+    //
+    // UPDATED FROM 2.8.15
+    //
+    if (version_compare($version, '2.8.15', '<')) {
+		$faqConfig->add('mail.remoteSMTP', 'false');
+		$faqConfig->add('mail.remoteSMTPServer', '');
+		$faqConfig->add('mail.remoteSMTPUsername', '');
+		$faqConfig->add('mail.remoteSMTPPassword', '');
+    }    
 
     //
     // UPDATES FROM 2.9.0-alpha

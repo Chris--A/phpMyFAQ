@@ -217,7 +217,7 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
 			
             <p>
                 <button class="btn btn-inverse toggleConfig" data-toggle="Mail">
-                    <i class="icon-retweet icon-white"></i>
+                    <i class="icon-envelope icon-white"></i>
                     <?php echo $PMF_LANG['mailControlCenter']; ?>
                 </button>
             </p>

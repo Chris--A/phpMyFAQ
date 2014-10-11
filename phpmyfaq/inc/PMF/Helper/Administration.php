@@ -40,13 +40,6 @@ class PMF_Helper_Administration
     private $permission = [];
 
     /**
-     * User object
-     *
-     * @var PMF_User
-     */
-    private $user = null;
-
-    /**
      * Adds a menu entry according to user permissions.
      * ',' stands for 'or', '*' stands for 'and'
      *
@@ -73,12 +66,18 @@ class PMF_Helper_Administration
         }
         
         if (isset($PMF_LANG[$caption])) {
-            $_caption = $PMF_LANG[$caption];
+            $renderedCaption = $PMF_LANG[$caption];
         } else {
-            $_caption = 'No string for ' . $caption;
+            $renderedCaption = 'No string for ' . $caption;
         }
         
-        $output = sprintf('<li%s><a href="?%s">%s</a></li>%s', $active, $action, $_caption, "\n");
+        $output = sprintf(
+            '<li%s><a href="?%s">%s</a></li>%s',
+            $active,
+            $action,
+            $renderedCaption,
+            "\n"
+        );
         
         if ($checkPerm) {
             return $this->evaluatePermission($restrictions) ? $output : '';
@@ -129,9 +128,9 @@ class PMF_Helper_Administration
     }
     
     /**
-     * Setter for permission aray
+     * Setter for permission array
      *
-     * @param PMF_User $user User object
+     * @param PMF_User $user
      *
      * @return void
      */
@@ -144,9 +143,37 @@ class PMF_Helper_Administration
         }
         // check user rights, set them TRUE
         $allUserRights = $user->perm->getAllUserRights($user->getUserId());
-        foreach ($allRights as $right) {
-            if (in_array($right['right_id'], $allUserRights))
-                $this->permission[$right['name']] = true;
+        if (false !== $allUserRights) {
+            foreach ($allRights as $right) {
+                if (in_array($right['right_id'], $allUserRights))
+                    $this->permission[$right['name']] = true;
+            }
         }
+    }
+
+    /**
+     * @param string $metaRobots
+     *
+     * @return string
+     */
+    public function renderMetaRobotsDropdown($metaRobots)
+    {
+        $html   = '';
+        $values = [
+            'index, follow',
+            'index, nofollow',
+            'noindex, follow',
+            'noindex, nofollow'
+        ];
+
+        foreach ($values as $value) {
+            $html .= sprintf(
+                '<option%s>%s</option>',
+                ($value === $metaRobots) ? ' selected' : '',
+                $value
+            );
+        }
+
+        return $html;
     }
 }

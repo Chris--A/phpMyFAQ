@@ -1,8 +1,8 @@
 <?php
 /**
- * Test suite for PMF_Category related classes
+ * Test case for PMF_Helper_Administration
  *
- * PHP Version 5.2
+ * PHP Version 5.3
  *
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -17,37 +17,42 @@
  * @category  phpMyFAQ
  * @package   PMF_Tests
  * @author    Thorsten Rinne <thorsten@phpmyfaq.de>
+ * @copyright 2014 phpMyFAQ Team
  * @license   http://www.mozilla.org/MPL/MPL-1.1.html Mozilla Public License Version 1.1
  * @link      http://www.phpmyfaq.de
- * @copyright 2010 phpMyFAQ Team
- * @since     2010-01-03
+ * @since     2014-08-31
  */
 
-// include PHPUnit
-require_once __DIR__ . '/../../vendor/phpunit/phpunit/src/Framework/TestSuite.php';
-require_once __DIR__ . '/../../vendor/phpunit/phpunit/src/TextUI/TestRunner.php';
-
-require_once 'PMF_Attachment_Filesystem_File_VanillaTest.php';
+require_once dirname(dirname(__DIR__)) . '/phpmyfaq/inc/PMF/Helper/Administration.php';
 
 /**
- * Category_AllTests
+ * PMF_Helper_AdministrationTest
  *
  * @category  phpMyFAQ
  * @package   PMF_Tests
  * @author    Thorsten Rinne <thorsten@phpmyfaq.de>
+ * @copyright 2012-2014 phpMyFAQ Team
  * @license   http://www.mozilla.org/MPL/MPL-1.1.html Mozilla Public License Version 1.1
  * @link      http://www.phpmyfaq.de
- * @copyright 2010 phpMyFAQ Team
- * @since     2010-01-03
+ * @since     2012-12-31
  */
-class Attachment_AllTests
+class PMF_Helper_AdministrationTest extends PHPUnit_Framework_TestCase
 {
-    public static function suite()
+    /**
+     * @var PMF_Helper_Administration
+     */
+    protected $instance;
+
+    protected function setUp()
     {
-        $suite = new PHPUnit_Framework_TestSuite('phpMyFAQ PMF_Attachment');
-
-        $suite->addTestSuite('PMF_Attachment_Filesystem_File_VanillaTest');
-
-        return $suite;
+        $this->instance = new PMF_Helper_Administration();
     }
-}
+
+    public function testRenderMetaRobotsDropdown()
+    {
+        $expected = '<option selected>index, follow</option><option>index, nofollow</option><option>noindex, follow</option><option>noindex, nofollow</option>';
+        $actual   = $this->instance->renderMetaRobotsDropdown('index, follow');
+
+        $this->assertEquals($expected, $actual);
+    }
+} 

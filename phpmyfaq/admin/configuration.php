@@ -30,9 +30,11 @@ if (!defined('IS_VALID_PHPMYFAQ')) {
 if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
     // actions defined by url: user_action=
     $userAction = PMF_Filter::filterInput(INPUT_GET, 'config_action', FILTER_SANITIZE_STRING, 'listConfig');
+    $csrfToken  = PMF_Filter::filterInput(INPUT_POST, 'csrf', FILTER_SANITIZE_STRING);
 
     // Save the configuration
-    if ('saveConfig' === $userAction) {
+    if ('saveConfig' === $userAction && isset($_SESSION['phpmyfaq_csrf_token']) &&
+        $_SESSION['phpmyfaq_csrf_token'] === $csrfToken) {
 
         $checks = array(
             'filter' => FILTER_SANITIZE_STRING,
@@ -42,14 +44,6 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
         $message         = '';
         $userAction      = 'listConfig';
         $oldConfigValues = $faqConfig->config;
-
-        /* XXX the cache concept is designed to be able to activate only one cache engine per time
-               so if there are more cache services implemented, respect it here*/
-        if (isset($editData['edit']['cache.varnishEnable']) && 'true' == $editData['edit']['cache.varnishEnable']) {
-            if (!extension_loaded('varnish')) {
-                throw new Exception('Varnish extension is not loaded');
-            }
-        }
 
         // Set the new values
         $forbiddenValues = array('{', '}', '$');
@@ -97,6 +91,7 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
                 <div id="user_message"><?php echo $message; ?></div>
                 <form class="form-horizontal" id="config_list" name="config_list" accept-charset="utf-8"
                       action="?action=config&amp;config_action=saveConfig" method="post">
+                    <input type="hidden" name="csrf" value="<?php echo $user->getCsrfTokenFromSession(); ?>">
 
                     <p>
                         <button class="btn btn-inverse toggleConfig" data-toggle="Main">
@@ -139,6 +134,14 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
                     <div id="configSpam" class="hide"></div>
 
                     <p>
+                        <button class="btn btn-inverse toggleConfig"  data-toggle="Seo">
+                            <i class="fa fa-search fa fa-white"></i>
+                            <?php echo $PMF_LANG['seoCenter']; ?>
+                        </button>
+                    </p>
+                    <div id="configSeo" class="hide"></div>
+
+                    <p>
                         <button class="btn btn-inverse toggleConfig" data-toggle="SocialNetworks">
                             <i class="fa fa-retweet fa fa-white"></i>
                             <?php echo $PMF_LANG['socialNetworksControlCenter']; ?>
@@ -157,6 +160,7 @@ if ($user->perm->checkRight($user->getUserId(), 'editconfig')) {
 
             </div>
         </div>
+
         <script type="text/javascript">
             toggleConfig = function (e) {
                 e.preventDefault();

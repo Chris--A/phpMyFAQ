@@ -124,7 +124,7 @@ class PMF_Sitemap
 
         $writeLetters = '<ul class="nav">';
 
-        if ($this->_config->getDb() instanceof PMF_DB_Sqlite || $this->_config->getDb() instanceof PMF_DB_Sqlite3) {
+        if ($this->_config->getDb() instanceof PMF_DB_Sqlite3) {
 
             $query = sprintf("
                     SELECT
@@ -232,9 +232,8 @@ class PMF_Sitemap
 
         $writeMap = '';
 
-        switch($this->type) {
-            case 'db2':
-            case 'sqlite':
+        switch(PMF_Db::getType()) {
+            case 'sqlite3':
                 $query = sprintf("
                     SELECT
                         fd.thema AS thema,

@@ -85,7 +85,6 @@ class PMF_DB_Mssql implements PMF_DB_Driver
 
         return true;
     }
-
     /**
      * This function sends a query to the database.
      *
@@ -309,5 +308,13 @@ class PMF_DB_Mssql implements PMF_DB_Driver
     public function close()
     {
         return mssql_close($this->conn);
+    }
+
+    /**
+     * @return string
+     */
+    public function now()
+    {
+        return 'GETDATE()';
     }
 }

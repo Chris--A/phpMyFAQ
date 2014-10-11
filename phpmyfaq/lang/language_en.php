@@ -1123,14 +1123,6 @@ $PMF_LANG["ad_verification_button"] = "Click to verify your phpMyFAQ installatio
 $PMF_LANG["ad_verification_notokay"] = "Your version of phpMyFAQ has local changes:";
 $PMF_LANG["ad_verification_okay"] = "Your version of phpMyFAQ was successfully verified.";
 
-// added v2.8.0-alpha - 2011-09-22 by Anatoliy
-$PMF_LANG['cacheControlCenter'] = 'Cache configuration';
-$LANG_CONF['cache.varnishEnable'] = array(0 => 'checkbox', 1 => 'Enable Varnish >=3.0 support<br><small>You will need varnish PECL extension</small>');
-$LANG_CONF['cache.varnishHost'] = array(0 => 'input', 1 => 'Varnish host');
-$LANG_CONF['cache.varnishPort'] = array(0 => 'input', 1 => 'Varnish port');
-$LANG_CONF['cache.varnishSecret'] = array(0 => 'input', 1 => 'Varnish secret');
-$LANG_CONF['cache.varnishTimeout'] = array(0 => 'input', 1 => 'Varnish timeout');
-
 // added v2.8.0-alpha - 2011-09-29 by Thorsten
 $PMF_LANG['ad_menu_searchfaqs'] = 'Search for FAQs';
 
@@ -1208,3 +1200,16 @@ $LANG_CONF["records.hideEmptyCategories"] = array(0 => "checkbox", 1 => "Hide em
 $LANG_CONF["search.searchForSolutionId"] = array(0 => "checkbox", 1 => "Search for solution ID<br>(default: enabled)");
 $LANG_CONF["socialnetworks.disableAll"] = array(0 => "checkbox", 1 => "Disable all social networks<br>(default: disabled)");
 $LANG_CONF["main.enableGzipCompression"] = array(0 => "checkbox", 1 => "Enable GZIP compression<br>(default: enabled)");
+
+// added v2.9.0-alpha2 - 2014-08-16 by Thorsten
+$PMF_LANG["ad_tag_delete_success"] = "The tag was deleted successfully.";
+$PMF_LANG["ad_tag_delete_error"] = "The tag was not deleted because an error occured.";
+$PMF_LANG["seoCenter"] = "Search engine configuration";
+$LANG_CONF["seo.metaTagsHome"] = array(0 => "select", 1 => "Meta Tags start page");
+$LANG_CONF["seo.metaTagsFaqs"] = array(0 => "select", 1 => "Meta Tags FAQs");
+$LANG_CONF["seo.metaTagsCategories"] = array(0 => "select", 1 => "Meta Tags category pages");
+$LANG_CONF["seo.metaTagsPages"] = array(0 => "select", 1 => "Meta Tags static pages");
+$LANG_CONF["seo.metaTagsAdmin"] = array(0 => "select", 1 => "Meta Tags Admin");
+$PMF_LANG["msgMatchingQuestions"] = "The following results closely matched your question:";
+$PMF_LANG["msgFinishSubmission"] = "If none of the suggestions above match your question, click the button below to finish submitting your question.";
+$LANG_CONF["main.enableLinkVerification"] = array(0 => "checkbox", 1 => "Enable automatic link verification<br>(default: enabled)");

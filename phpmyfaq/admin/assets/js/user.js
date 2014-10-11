@@ -20,7 +20,7 @@
  * @param userId User ID
  */
 function getUserRights(userId) {
-    $.getJSON("index.php?action=ajax&ajax=user&ajaxaction=get_user_rights&user_id=" + userId,
+    $.getJSON('index.php?action=ajax&ajax=user&ajaxaction=get_user_rights&user_id=' + userId,
         function(data) {
             $.each(data, function(i, val) {
                 $('#user_right_' + val).attr('checked', true);
@@ -38,3 +38,23 @@ function updateUser(userId) {
     getUserData(userId);
     getUserRights(userId);
 }
+
+
+$(document).ready(function() {
+    "use strict";
+
+    var button   = $('#checkAll');
+    var checkbox = $('.permission');
+
+    button.data('type', 'check');
+    button.click(function(event) {
+        event.preventDefault();
+        if (button.data('type') === 'check') {
+            checkbox.prop('checked', true);
+            button.data('type', 'uncheck');
+        } else {
+            checkbox.prop('checked', false);
+            button.data('type', 'check');
+        }
+    });
+});

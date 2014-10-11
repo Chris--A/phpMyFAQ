@@ -127,7 +127,7 @@ class PMF_DB_Sqlsrv implements PMF_DB_Driver
             $query .= sprintf(' OFFSET %d ROWS FETCH NEXT %d ROWS ONLY', $offset, $rowcount);
         }
 
-        $result  = sqlsrv_query($this->conn, $query, [], $options);
+        $result = sqlsrv_query($this->conn, $query, [], $options);
 
         if (!$result) {
             $this->sqllog .= $this->error();
@@ -336,5 +336,13 @@ class PMF_DB_Sqlsrv implements PMF_DB_Driver
     public function close()
     {
         sqlsrv_close($this->conn);
+    }
+
+    /**
+     * @return string
+     */
+    public function now()
+    {
+        return 'GETDATE()';
     }
 }

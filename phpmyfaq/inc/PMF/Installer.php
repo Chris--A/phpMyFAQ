@@ -306,6 +306,7 @@ class PMF_Installer
         'main.enableGravatarSupport'              => 'false',
         'main.enableRssFeeds'                     => 'true',
         'main.enableGzipCompression'              => 'true',
+        'main.enableLinkVerification'             => 'true',
 
         'records.numberOfRecordsPerPage'          => '10',
         'records.numberOfShownNewsEntries'        => '3',
@@ -360,7 +361,13 @@ class PMF_Installer
         'socialnetworks.twitterAccessTokenKey'    => '',
         'socialnetworks.twitterAccessTokenSecret' => '',
         'socialnetworks.enableFacebookSupport'    => 'false',
-        'socialnetworks.disableAll'               => 'false'
+        'socialnetworks.disableAll'               => 'false',
+
+        'seo.metaTagsHome'                        => 'index, follow',
+        'seo.metaTagsFaqs'                        => 'index, follow',
+        'seo.metaTagsCategories'                  => 'index, follow',
+        'seo.metaTagsPages'                       => 'index, follow',
+        'seo.metaTagsAdmin'                       => 'noindex, nofollow'
     );
 
     /**
@@ -388,7 +395,10 @@ class PMF_Installer
     public function checkBasicStuff()
     {
         if (!$this->checkMinimumPhpVersion()) {
-            printf('<p class="alert alert-danger">Sorry, but you need PHP %s or later!</p>', PMF_System::VERSION_MINIMUM_PHP);
+            printf(
+                '<p class="alert alert-danger">Sorry, but you need PHP %s or later!</p>',
+                PMF_System::VERSION_MINIMUM_PHP
+            );
             PMF_System::renderFooter();
         }
 
@@ -452,7 +462,7 @@ class PMF_Installer
         }
 
         if (! is_readable(PMF_ROOT_DIR . '/inc/data.php') && ! is_readable(PMF_ROOT_DIR . '/config/database.php')) {
-            echo '<p class="alert alert-danger">It seems you never run a version of phpMyFAQ.<br />' .
+            echo '<p class="alert alert-danger">It seems you never run a version of phpMyFAQ.<br>' .
                 'Please use the <a href="setup.php">install script</a>.</p>';
             PMF_System::renderFooter();
         }
@@ -567,7 +577,7 @@ class PMF_Installer
         $query = $uninst = $dbSetup = [];
 
         // Check table prefix
-        $dbSetup['dbPrefix'] = $sqltblpre = PMF_Filter::filterInput(INPUT_POST, 'sqltblpre', FILTER_SANITIZE_STRING, '');
+        $dbSetup['dbPrefix'] = PMF_Filter::filterInput(INPUT_POST, 'sqltblpre', FILTER_SANITIZE_STRING, '');
         if ('' !== $dbSetup['dbPrefix']) {
             PMF_Db::setTablePrefix($dbSetup['dbPrefix']);
         }
@@ -766,7 +776,7 @@ class PMF_Installer
                 $this->_system->cleanInstallation();
                 PMF_System::renderFooter(true);
             }
-            usleep(2500);
+            usleep(1000);
             $count++;
             if (!($count % 10)) {
                 echo '| ';
@@ -848,22 +858,5 @@ class PMF_Installer
         } else {
             echo "<p class=\"alert alert-danger\">Please delete the file <em>./setup/update.php</em> manually.</p>\n";
         }
-    }
-
-    /**
-     * Echos the questionnaire data
-     *
-     * @return void
-     */
-    public function printDataList()
-    {
-        $q = new PMF_Questionnaire_Data($this->_mainConfig);
-        $options = $q->get();
-        echo '<dl>' . PHP_EOL;
-        array_walk($options, 'data_printer');
-        printf(
-            '</dl><input type="hidden" name="systemdata" value="%s" />',
-            PMF_String::htmlspecialchars(serialize($q->get()), ENT_QUOTES)
-        );
     }
 }

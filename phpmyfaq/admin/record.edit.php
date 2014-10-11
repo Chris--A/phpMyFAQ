@@ -182,6 +182,7 @@ if (($user->perm->checkRight($user->getUserId(), 'editbt') ||
     $faqData['keywords'] = (isset($faqData['keywords']) ? PMF_String::htmlspecialchars($faqData['keywords']) : '');
     $faqData['author']   = (isset($faqData['author']) ? PMF_String::htmlspecialchars($faqData['author']) : $user->getUserData('display_name'));
     $faqData['email']    = (isset($faqData['email']) ? PMF_String::htmlspecialchars($faqData['email']) : $user->getUserData('email'));
+    $faqData['isoDate']  = (isset($faqData['date']) ? $faqData['date'] : date('Y-m-d H:i'));
     $faqData['date']     = (isset($faqData['date']) ? $date->format($faqData['date']) : $date->format(date('Y-m-d H:i')));
     $faqData['changed']  = (isset($faqData['changed']) ? $faqData['changed'] : '');
 
@@ -551,7 +552,7 @@ if (($user->perm->checkRight($user->getUserId(), 'editbt') ||
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-lg-offset-1 col-lg-10">
-                                <select name="rubrik[]" id="phpmyfaq-categories" size="10" multiple="multiple"
+                                <select name="rubrik[]" id="phpmyfaq-categories" size="10" multiple
                                         class="form-control">
                                     <?php echo $categoryHelper->renderOptions($categories); ?>
                                 </select>
@@ -819,7 +820,7 @@ if (($user->perm->checkRight($user->getUserId(), 'editbt') ||
             $('#date').val('');
         } else if ('dateKeep' === how) {
             showIDContainer(false);
-            $('#date').val('<?php echo $faqData['date']; ?>');
+            $('#date').val('<?php echo $faqData['isoDate']; ?>');
         } else if ('dateCustomize' === how) {
             showIDContainer(true);
             $('#date').val('');

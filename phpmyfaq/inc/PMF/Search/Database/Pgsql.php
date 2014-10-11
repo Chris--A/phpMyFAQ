@@ -42,6 +42,7 @@ class PMF_Search_Database_Pgsql extends PMF_Search_Database
     public function __construct(PMF_Configuration $config)
     {
         parent::__construct($config);
+        $this->relevanceSupport = true;
     }
 
     /**
@@ -101,24 +102,24 @@ class PMF_Search_Database_Pgsql extends PMF_Search_Database
         $enableRelevance = $this->_config->get('search.enableRelevance');
 
         if ($enableRelevance) {
-            $machColumns = '';
+            $matchColumns = '';
 
             foreach ($this->matchingColumns as $matchColumn) {
                 $match = sprintf("to_tsvector(coalesce(%s,''))", $matchColumn);
-                if (empty($machColumns)) {
-                    $machColumns .= '(' . $match;
+                if (empty($matchColumns)) {
+                    $matchColumns .= '(' . $match;
                 } else {
-                    $machColumns .= ' || ' . $match;
+                    $matchColumns .= ' || ' . $match;
                 }
             }
 
             // Add the ILIKE since the FULLTEXT looks for the exact phrase only
-            $machColumns .= ') @@ query) OR (' . implode(" || ' ' || ", $this->matchingColumns);
+            $matchColumns .= ') @@ query) OR (' . implode(" || ' ' || ", $this->matchingColumns);
         } else {
-            $machColumns = implode(" || ' ' || ", $this->matchingColumns);
+            $matchColumns = implode(" || ' ' || ", $this->matchingColumns);
         }
 
-        return $machColumns;
+        return $matchColumns;
     }
 
     /**
@@ -130,7 +131,7 @@ class PMF_Search_Database_Pgsql extends PMF_Search_Database
     {
         $resultColumns = '';
         $config        = $this->_config->get('search.relevance');
-        $list          = explode(",", $config);
+        $list          = explode(',', $config);
 
         // Set weight
         $weights = array('A', 'B', 'C', 'D');
@@ -143,10 +144,12 @@ class PMF_Search_Database_Pgsql extends PMF_Search_Database
             $columnName = substr(strstr($matchColumn, '.'), 1);
 
             if (isset($weight[$columnName])) {
-                $column = sprintf("ts_rank_cd(setweight(to_tsvector(coalesce(%s,'')), '" . $weight[$columnName]
-                    . "'), query) AS rel_%s",
+                $column = sprintf(
+                    "TS_RANK_CD(SETWEIGHT(TO_TSVECTOR(COALESCE(%s, '')), '%s'), query) AS relevance_%s",
                     $matchColumn,
-                    $columnName);
+                    $weight[$columnName],
+                    $columnName
+                );
 
                 $resultColumns .= ', ' . $column;
             }
@@ -168,7 +171,10 @@ class PMF_Search_Database_Pgsql extends PMF_Search_Database
         $order = '';
 
         foreach ($list as $field) {
-            $string = 'rel_' . $field . ' DESC';
+            $string = sprintf(
+                'relevance_%s DESC',
+                $field
+            );
             if (empty($order)) {
                 $order .= $string;
             } else {

@@ -259,6 +259,29 @@ class PMF_Tags
     }
 
     /**
+     * Updates a tag
+     *
+     * @param PMF_Entity_Tags $entity
+     * @return bool
+     */
+    public function updateTag(PMF_Entity_Tags $entity)
+    {
+        $query    = sprintf("
+            UPDATE
+                %sfaqtags
+            SET
+                tagging_name = '%s'
+            WHERE
+                tagging_id = %d",
+            PMF_Db::getTablePrefix(),
+            $entity->getName(),
+            $entity->getId()
+        );
+
+        return $this->_config->getDb()->query($query);
+    }
+
+    /**
      * Deletes all tags from a given record id
      *
      * @param integer $recordId Record ID
@@ -284,6 +307,51 @@ class PMF_Tags
 
         return true;
 
+    }
+
+    /**
+     * Deletes a given tag
+     *
+     * @param integer $tagId
+     * @return bool
+     */
+    public function deleteTag($tagId)
+    {
+        if (!is_integer($tagId)) {
+            return false;
+        }
+
+        try {
+            $query = sprintf("
+                DELETE FROM
+                    %sfaqtags
+                WHERE
+                    tagging_id = %d",
+                PMF_Db::getTablePrefix(),
+                $tagId
+            );
+
+            $this->_config->getDb()->query($query);
+        } catch (PMF_Exception $e) {
+            // @todo Handle exception!
+        }
+
+        try {
+            $query = sprintf("
+                DELETE FROM
+                    %sfaqdata_tags
+                WHERE
+                    tagging_id = %d",
+                PMF_Db::getTablePrefix(),
+                $tagId
+            );
+
+            $this->_config->getDb()->query($query);
+        } catch (PMF_Exception $e) {
+            // @todo Handle exception!
+        }
+
+        return true;
     }
 
     /**

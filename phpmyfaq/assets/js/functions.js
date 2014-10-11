@@ -25,9 +25,6 @@ var addAttachment,
     infoBox,
     selectSelectAll,
     selectUnselectAll,
-    formCheckAll,
-    formUncheckAll,
-    checkAll,
     closeWindow,
     addAttachmentLink,
     showLongComment,
@@ -48,22 +45,6 @@ $(document).ready(function () {
             'width=550, height=130, toolbar=no, directories=no, status=no, scrollbars=no, resizable=yes, menubar=no'
         );
         popup.focus();
-    };
-
-    /**
-     * Checks all checkboxes
-     *
-     * @param checkBox
-     */
-    checkAll = function checkAll(checkBox) {
-        var v = checkBox.checked,
-            f = checkBox.form,
-            i = 0;
-        for (i = 0; i < f.elements.length; i += 1) {
-            if (f.elements[i].type === 'checkbox') {
-                f.elements[i].checked = v;
-            }
-        }
     };
 
     /**
@@ -106,34 +87,6 @@ $(document).ready(function () {
             i = 0;
         for (i = 0; i < selectOptions.length; i += 1) {
             selectOptions[i].selected = false;
-        }
-    };
-
-    /**
-     * checks all checkboxes in form with the given ID.
-     *
-     * @param   form_id
-     * @return  void
-     */
-    formCheckAll = function formCheckAll(form_id) {
-        var inputElements = $('#' + form_id + ' input'),
-            i;
-        for (i = 0; i < inputElements.length; i = 1 + 1) {
-            inputElements[i].checked = true;
-        }
-    };
-
-    /**
-     * unchecks all checkboxes in form with the given ID.
-     *
-     * @param   form_id
-     * @return  void
-     */
-    formUncheckAll = function formUncheckAll(form_id) {
-        var inputElements = $('#' + form_id + ' input'),
-            i;
-        for (i = 0; i < inputElements.length; i = 1 + 1) {
-            inputElements[i].checked = false;
         }
     };
 
@@ -337,6 +290,7 @@ $(document).ready(function () {
                     $('#loader').hide();
                 } else if (json.success === undefined) {
                     $('#qerror').empty();
+                    $('.hint-search-suggestion').show();
                     $('#questionForm').fadeOut('slow');
                     $('#answerForm').html(json.result);
                     $('#answerForm').fadeIn('slow');

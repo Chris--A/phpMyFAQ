@@ -44,28 +44,28 @@ if [ "x${PMF_PACKAGE_FOLDER}" = "x" ]; then
 fi
 
 cwd=`pwd`
-git checkout-index -f -a --prefix=$cwd/build/${PMF_PACKAGE_FOLDER}/
-
-# add dependecies
-composer install
+git checkout-index -f -a --prefix=$cwd/build/checkout/${PMF_PACKAGE_FOLDER}/
 
 # Add missing directories
-mkdir -p $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/inc/libs/phpseclib/Crypt
+mkdir -p $cwd/build/package/${PMF_PACKAGE_FOLDER}/
+mkdir -p $cwd/build/checkout/${PMF_PACKAGE_FOLDER}/phpmyfaq/inc/libs/phpseclib/Crypt
 
-# copy dependencies
-cp -r $cwd/vendor/phpseclib/phpseclib/Crypt $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/inc/libs/phpseclib
-cp -r $cwd/vendor/thorsten/twitteroauth/twitteroauth $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/inc/libs/twitteroauth
-cp -r $cwd/vendor/symfony/class-loader/* $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/inc/libs/
+cd $cwd/build/checkout/${PMF_PACKAGE_FOLDER}/
+
+# add dependecies
+composer install --no-dev
+npm install
+bower install
+grunt build
 
 # prepare packaging
-mkdir $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/phpmyfaq
-mv $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/* $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq/phpmyfaq/
+cd $cwd
+mv $cwd/build/checkout/${PMF_PACKAGE_FOLDER}/phpmyfaq $cwd/build/package/${PMF_PACKAGE_FOLDER}
 
 # build packages
-tar cfvz ${PMF_PACKAGE_FOLDER}.tar.gz -C $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq .
-cd $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq
+tar cfvz ${PMF_PACKAGE_FOLDER}.tar.gz -C $cwd/build/package/${PMF_PACKAGE_FOLDER}/phpmyfaq .
+cd $cwd/build/package/${PMF_PACKAGE_FOLDER}
 zip -r $cwd/${PMF_PACKAGE_FOLDER}.zip phpmyfaq
-
 cd $cwd
 
 # md5sum
@@ -73,4 +73,7 @@ $MD5BIN "${PMF_PACKAGE_FOLDER}.tar.gz" > "${PMF_PACKAGE_FOLDER}.tar.gz.md5"
 $MD5BIN "${PMF_PACKAGE_FOLDER}.zip" > "${PMF_PACKAGE_FOLDER}.zip.md5"
 
 # clean up
-rm -rf $cwd/build/${PMF_PACKAGE_FOLDER}/phpmyfaq
+rm -rf $cwd/build/checkout/${PMF_PACKAGE_FOLDER}
+rm -rf $cwd/build/package/${PMF_PACKAGE_FOLDER}
+
+echo "done.\n";

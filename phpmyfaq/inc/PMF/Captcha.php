@@ -501,8 +501,7 @@ class PMF_Captcha
                     $this->userAgent, 
                     $this->_config->getLanguage()->getLanguage(),
                     $this->ip, 
-                    $this->timestamp
-                );
+                    $this->timestamp);
                     
                 $this->_config->getDb()->query($insert);
                 return true;
@@ -547,22 +546,8 @@ class PMF_Captcha
             WHERE 
                 captcha_time < %d", 
             PMF_Db::getTablePrefix(),
-            $_SERVER['REQUEST_TIME'] - $time
-        );
+            $_SERVER['REQUEST_TIME'] - $time);
             
-        $this->_config->getDb()->query($delete);
-
-        $delete = sprintf("
-            DELETE FROM
-                %sfaqcaptcha
-            WHERE
-                useragent = '%s' AND language = '%s' AND ip = '%s'",
-            PMF_Db::getTablePrefix(),
-            $this->userAgent,
-            $this->_config->getLanguage()->getLanguage(),
-            $this->ip
-        );
-
         $this->_config->getDb()->query($delete);
     }
 

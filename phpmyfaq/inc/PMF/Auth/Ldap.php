@@ -252,12 +252,12 @@ class PMF_Auth_Ldap extends PMF_Auth implements PMF_Auth_Driver
     }
 
     /**
-     * Returns number of characters of name, 0 will be returned if it fails
+     * Returns number of characters of name, 0 will be returned
      *
      * @param string $login        Loginname
      * @param array  $optionalData Optional data
      *
-     * @return integer
+     * @return string
      */
     public function checkLogin($login, Array $optionalData = null)
     {

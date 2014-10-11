@@ -318,12 +318,5 @@ class PMF_DB_Pgsql implements PMF_DB_Driver
     {
         return pg_close($this->conn);
     }
-
-    /**
-     * @return string
-     */
-    public function now()
-    {
-        return 'CURRENT_TIMESTAMP';
-    }
+    
 }

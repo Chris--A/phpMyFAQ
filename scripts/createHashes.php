@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 /**
  * This scripts iterates recursively through the whole phpMyFAQ project and

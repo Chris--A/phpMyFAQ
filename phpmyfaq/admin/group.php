@@ -727,9 +727,12 @@ getGroupList();
                         <ul class="list-group">
                             <li class="list-group-item text-center">
                                 <span class="select_all">
-                                    <a class="btn btn-primary btn-sm" href="#" id="checkAll">
+                                    <a class="btn btn-primary btn-sm" href="javascript:formCheckAll('rightsForm')">
                                         <?php echo $PMF_LANG['ad_user_checkall']; ?>
-                                        /
+                                    </a>
+                                </span>
+                                <span class="unselect_all">
+                                    <a class="btn btn-primary btn-sm" href="javascript:formUncheckAll('rightsForm')">
                                         <?php echo $PMF_LANG['ad_user_uncheckall']; ?>
                                     </a>
                                 </span>
@@ -738,8 +741,7 @@ getGroupList();
                             <li class="list-group-item checkbox" id="group_rights_table">
                                 <label>
                                     <input id="group_right_<?php echo $right['right_id']; ?>" type="checkbox"
-                                           name="group_rights[]" value="<?php echo $right['right_id']; ?>"
-                                           class="permission">
+                                           name="group_rights[]" value="<?php echo $right['right_id']; ?>">
                                     <?php
                                     if (isset($PMF_LANG['rightsLanguage'][$right['name']])) {
                                         echo $PMF_LANG['rightsLanguage'][$right['name']];

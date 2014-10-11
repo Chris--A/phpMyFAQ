@@ -45,14 +45,14 @@ class PMF_Auth_Sso extends PMF_Auth implements PMF_Auth_Driver
      */
     public function add($login, $pass)
     {
-        if ($this->_config->get('security.ldapSupport')) {
-            // LDAP + SSO
+        if ($this->_config->get('security.ldapSupport')) {  
+            // LDAP + SSO enabled
             $authLdap = new PMF_Auth_Ldap($this->_config);
             $result   = $authLdap->add($login, $pass);
 
             return $result;
         } else {
-            // LDAP disabled
+            // SSO enabled, LDAP disabled
             $user   = new PMF_User($this->_config);
             $result = $user->createUser($login, null);
 
@@ -60,7 +60,7 @@ class PMF_Auth_Sso extends PMF_Auth implements PMF_Auth_Driver
                 $user->setStatus('active');
             }
 
-            // Update user information
+            // Update user information from SSO
             $user->setUserData(
                 array(
                     'display_name' => $login
@@ -123,7 +123,6 @@ class PMF_Auth_Sso extends PMF_Auth implements PMF_Auth_Driver
                 }
             }
             if ($user === $login) {
-                $this->add($login, $pass);
                 return true;
             } else {
                 return false;
@@ -132,15 +131,15 @@ class PMF_Auth_Sso extends PMF_Auth implements PMF_Auth_Driver
     }
 
     /**
-     * Returns 1, if $_SERVER['REMOTE_USER'] is set.
+     * Returns true, if $_SERVER['REMOTE_USER'] is set.
      *
      * @param string $login        Loginname
      * @param array  $optionalData Optional data
      *
-     * @return integer
+     * @return boolean
      */
     public function checkLogin($login, Array $optionalData = null)
     {
-        return isset($_SERVER['REMOTE_USER']) ? 1 : 0;
+        return isset($_SERVER['REMOTE_USER']) ? true : false;
     }
 }

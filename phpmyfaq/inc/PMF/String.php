@@ -49,13 +49,15 @@ class PMF_String
     
     /**
      * Constructor
+     *
+     * @return void
      */
     private final function __construct()
     {
     }
     
     /** 
-     * Init
+     * Initalize myself
      *
      * @param string $language Language
      *
@@ -102,13 +104,13 @@ class PMF_String
     /**
      * Get a part of string
      *
-     * @param string  $string String
+     * @param string  $str    String
      * @param integer $start  Start
      * @param integer $length Length
      *
      * @return string
      */
-    public static function substr($string, $start, $length = 0)
+    public static function substr($string, $start, $length = null)
     {
         return self::$instance->substr($string, $start, $length);
     }    
@@ -117,9 +119,9 @@ class PMF_String
     /**
      * Get position of the first occurence of a string
      *
-     * @param string  $haystack Haystack
-     * @param string  $needle   Needle
-     * @param integer $offset   Offset
+     * @param string $haystack Haystack
+     * @param string $needle   Needle
+     * @param string $offset   Offset
      *
      * @return int
      */
@@ -173,9 +175,7 @@ class PMF_String
     /**
      * Set current encoding
      *
-     * @param string $encoding
-     *
-     * @return void
+     * @return string
      */
     public static function setEncoding($encoding)
     {
@@ -184,11 +184,11 @@ class PMF_String
     
     
     /**
-     * Check if a language could be converted to iso-8859-1
-     *
-     * @param string $language
-     *
-     * @return boolean
+	 * Check if a language could be converted to iso-8859-1
+	 *
+	 * @param string $language
+	 *
+	 * @return boolean
      */
     public static function isLangUTF8ToLatinConvertable($language)
     {
@@ -203,12 +203,12 @@ class PMF_String
     
     
     /**
-     * Get last occurence of a string within another
-     *
-     * @param string $haystack
-     * @param string $needle
-     *
-     * @return string
+	 * Get last occurence of a string within another
+	 *
+	 * @param string $haystack
+	 * @param string $needle
+	 *
+	 * @return string
      */
     public static function strrchr($haystack, $needle)
     {
@@ -231,13 +231,13 @@ class PMF_String
     
     
     /**
-     * Find position of last occurrence of a char in a string
-     *
-     * @param string $haystack
-     * @param string $needle
-     * @param int $offset
-     *
-     * @return int
+	 * Find position of last occurrence of a char in a string
+	 *
+	 * @param string $haystack
+	 * @param string $needle
+	 * @param int $offset
+	 *
+	 * @return int
      */
     public static function strrpos($haystack, $needle, $offset = 0)
     {
@@ -291,7 +291,7 @@ class PMF_String
      */
     public static function preg_split($pattern, $subject, $limit = -1, $flags = 0)
     {
-        return self::$instance->preg_split($pattern, $subject, $limit, $flags);
+        return self::$instance->preg_split($pattern, $subject, $limit = -1, $flags = 0);
     }
     
     

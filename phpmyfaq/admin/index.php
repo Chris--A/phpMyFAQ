@@ -208,7 +208,7 @@ if (isset($auth) && count($user->perm->getAllUserRights($user->getUserId())) > 0
                 case 'config_list': require 'ajax.config_list.php'; break;
                 case 'config':      require 'ajax.config.php'; break;
                 // Tags management
-                case 'tags':        require 'ajax.tags.php'; break;
+                case 'tags_list':   require 'ajax.tags_list.php'; break;
                 // Comments
                 case 'comment':     require 'ajax.comment.php'; break;
                 // Records
@@ -253,7 +253,7 @@ if (isset($auth) && count($user->perm->getAllUserRights($user->getUserId())) > 0
             // functions for user administration
             case 'user':              require 'user.php'; break;
             case 'group':             require 'group.php'; break;
-            // functions for content administration
+            // functions for record administration
             case 'viewinactive':
             case 'viewactive':
             case 'view':              require 'record.show.php'; break;
@@ -267,9 +267,6 @@ if (isset($auth) && count($user->perm->getAllUserRights($user->getUserId())) > 0
             case "delatt":            require 'record.delatt.php'; break;
             case "question":          require 'record.questions.php'; break;
             case 'comments':          require 'record.comments.php'; break;
-            // functions for tags
-            case 'tags':              require 'tags.main.php'; break;
-            case 'deletetag':         require 'tags.main.php'; break;
             // news administraion
             case 'news':
             case 'addnews':

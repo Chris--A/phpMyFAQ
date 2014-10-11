@@ -42,9 +42,7 @@ if (PMF_Language::isASupportedLanguage($ajaxlang)) {
     require_once 'lang/language_en.php';
 }
 
-//
-// Load plurals support for selected language
-//
+//Load plurals support for selected language
 $plr = new PMF_Language_Plurals($PMF_LANG);
 
 //
@@ -52,24 +50,18 @@ $plr = new PMF_Language_Plurals($PMF_LANG);
 //
 PMF_String::init($languageCode);
 
-//
 // Check captcha
-//
 $captcha = new PMF_Captcha($faqConfig);
 $captcha->setSessionId(
     PMF_Filter::filterInput(INPUT_COOKIE, PMF_Session::PMF_COOKIE_NAME_SESSIONID, FILTER_VALIDATE_INT)
 );
 
-//
 // Send headers
-//
 $http = new PMF_Helper_Http();
 $http->setContentType('application/json');
 $http->addHeader();
 
-//
 // Set session
-//
 $faqsession = new PMF_Session($faqConfig);
 $network    = new PMF_Network($faqConfig);
 $stopwords  = new PMF_Stopwords($faqConfig);
@@ -78,9 +70,7 @@ if (!$network->checkIp($_SERVER['REMOTE_ADDR'])) {
     $message = array('error' => $PMF_LANG['err_bannedIP']);
 }
 
-//
 // Check, if user is logged in
-//
 $user = PMF_User_CurrentUser::getFromSession($faqConfig);
 if ($user instanceof PMF_User_CurrentUser) {
     $isLoggedIn = true;
@@ -92,14 +82,7 @@ if ('savevoting' !== $action && 'saveuserdata' !== $action && 'changepassword' !
     !$captcha->checkCaptchaCode($code) && !$isLoggedIn) {
     $message = array('error' => $PMF_LANG['msgCaptcha']);
 }
-
-//
-// Check if logged in if FAQ is completely secured
-//
-if (false === $isLoggedIn && $faqConfig->get('security.enableLoginOnly')) {
-    $message = array('error' => $PMF_LANG['ad_msg_noauth']);
-}
-
+    
 if (isset($message['error'])) {
     print json_encode($message);
     exit();
@@ -140,15 +123,6 @@ switch ($action) {
             $mail = $faqConfig->get('main.administrationMail');
         }
 
-        // Check display name and e-mail address for not logged in users
-        if (false === $isLoggedIn) {
-            $user = new PMF_User($faqConfig);
-            if (true === $user->checkDisplayName($username) && true === $user->checkMailAddress($mail)) {
-                echo json_encode(array('error' => $PMF_LANG['err_SaveComment']));
-                break;
-            }
-        }
-
         if (!is_null($username) && !empty($username) && !empty($mail) && !is_null($mail) && !is_null($comment) &&
             !empty($comment) && $stopwords->checkBannedWord($comment) && !$faq->commentDisabled($id, $languageCode, $type)) {
 
@@ -158,15 +132,14 @@ switch ($action) {
                 // @todo handle the exception
             }
 
-            $commentData = [
+            $commentData = array(
                 'record_id' => $id,
                 'type'      => $type,
                 'username'  => $username,
                 'usermail'  => $mail,
                 'comment'   => nl2br($comment),
                 'date'      => $_SERVER['REQUEST_TIME'],
-                'helped'    => ''
-            ];
+                'helped'    => '');
 
             if ($oComment->addComment($commentData)) {
                 $emailTo = $faqConfig->get('main.administrationMail');

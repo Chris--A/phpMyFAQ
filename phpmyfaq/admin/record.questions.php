@@ -44,7 +44,7 @@ if ($user->perm->checkRight($user->getUserId(), 'delquestion')) {
     $category->setGroups($currentAdminGroups);
     $date       = new PMF_Date($faqConfig);
     $questionId = PMF_Filter::filterInput(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
+    
     $toggle = PMF_Filter::filterInput(INPUT_GET, 'is_visible', FILTER_SANITIZE_STRING);
     if ($toggle == 'toggle') {
         $is_visible = $faq->getVisibilityOfQuestion($questionId);
@@ -59,8 +59,7 @@ if ($user->perm->checkRight($user->getUserId(), 'delquestion')) {
 
     if (count($openquestions) > 0) {
 ?>
-            <form id="questionSelection" name="questionSelection" method="post" accept-charset="utf-8">
-                <input type="hidden" name="csrf" value="<?php print $user->getCsrfTokenFromSession(); ?>">
+                <form id="questionSelection" name="questionSelection" method="post" accept-charset="utf-8">
                 <table class="table table-striped">
                 <thead>
                     <tr>
@@ -97,7 +96,7 @@ if ($user->perm->checkRight($user->getUserId(), 'delquestion')) {
                         <td>
                             <a href="?action=question&amp;id=<?php echo $question['id']; ?>&amp;is_visible=toggle"
                                class="btn btn-info">
-                                <?php echo ('Y' == $question['is_visible']) ? $PMF_LANG['ad_gen_yes'] : $PMF_LANG['ad_gen_no']; ?>
+                                <?php echo ('Y' == $question['is_visible']) ? $PMF_LANG['ad_gen_no'] : $PMF_LANG['ad_gen_yes']; ?>
                             </a>
                         </td>
                         <td>
@@ -127,7 +126,32 @@ if ($user->perm->checkRight($user->getUserId(), 'delquestion')) {
                     </button>
                 </p>
 
-                <script src="assets/js/record.js"></script>
+                <script type="text/javascript">
+                    /* <![CDATA[ */
+                    $('#submitDeleteQuestions').click(function() { deleteQuestions(); return false; });
+
+                    function deleteQuestions()
+                    {
+                        var questions = $('#questionSelection').serialize();
+
+                        $('#returnMessage').empty();
+                        $.ajax({
+                            type: 'POST',
+                            url:  'index.php?action=ajax&ajax=records&ajaxaction=delete_question',
+                            data: questions,
+                            success: function(msg) {
+                                $('#saving_data_indicator').html('<img src="images/indicator.gif" /> deleting ...');
+                                $('tr td input:checked').parent().parent().fadeOut('slow');
+                                $('#saving_data_indicator').fadeOut('slow');
+                                $('#returnMessage').
+                                        html('<p class="alert alert-success">' + msg + '</p>');
+                            }
+                        });
+                        return false;
+                    }
+
+                    /* ]]> */
+                </script>
 <?php
     } else {
         echo $PMF_LANG['msgNoQuestionsAvailable'];

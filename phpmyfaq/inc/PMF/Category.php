@@ -202,8 +202,7 @@ class PMF_Category
                 fc.parent_id AS parent_id,
                 fc.name AS name,
                 fc.description AS description,
-                fc.user_id AS user_id,
-                fc.active AS active
+                fc.user_id AS user_id
             FROM
                 %sfaqcategories fc
             LEFT JOIN
@@ -213,8 +212,7 @@ class PMF_Category
             LEFT JOIN
                 %sfaqcategory_user fu
             ON
-                fc.id = fu.category_id
-            %s
+                fc.id = fu.category_id%s
             GROUP BY
                 fc.id, fc.lang, fc.parent_id, fc.name, fc.description, fc.user_id
             ORDER BY
@@ -227,12 +225,10 @@ class PMF_Category
 
         $result = $this->_config->getDb()->query($query);
 
-        if ($result) {
-            while ($row = $this->_config->getDb()->fetchArray($result)) {
-                $this->categoryName[$row['id']] = $row;
-                $this->categories[] =& $this->categoryName[$row['id']];
-                $this->children[$row['parent_id']][$row['id']] =& $this->categoryName[$row['id']];
-            }
+        while ($row = $this->_config->getDb()->fetchArray($result)) {
+            $this->categoryName[$row['id']] = $row;
+            $this->categories[] =& $this->categoryName[$row['id']];
+            $this->children[$row['parent_id']][$row['id']] =& $this->categoryName[$row['id']];
         }
 
         return $this->categories;
@@ -251,7 +247,7 @@ class PMF_Category
         $_query = '';
         $query  = sprintf('
             SELECT
-                id, lang, parent_id, name, description, user_id, active
+                id, lang, parent_id, name, description, user_id
             FROM
                 %sfaqcategories
             WHERE ',
@@ -286,7 +282,7 @@ class PMF_Category
     {
         $query = sprintf("
             SELECT
-                id, lang, parent_id, name, description, user_id, active
+                id, lang, parent_id, name, description, user_id
             FROM
                 %sfaqcategories",
             PMF_Db::getTablePrefix());
@@ -359,6 +355,21 @@ class PMF_Category
     }
 
     /**
+     * Get the line number where to find the node $id
+     *
+     * @param  integer $id Category id
+     * @return integer
+     */
+    private function getLine($id)
+    {
+        for ($i = 0; $i < count($this->lineTab); $i++) {
+            if ($this->lineTab[$i]['id'] == $id) {
+                return $i;
+            }
+        }
+    }
+
+    /**
      * Transforms the linear array in a 1D array in the order of the tree, with
      * the info
      *
@@ -377,7 +388,6 @@ class PMF_Category
             $thisParent_id   = $this->categoryName[$id]['parent_id'];
             $thisName        = $this->categoryName[$id]['name'];
             $thisdescription = $this->categoryName[$id]['description'];
-            $active          = $this->categoryName[$id]['active'];
         }
 
         if ($num > 0) {
@@ -409,8 +419,7 @@ class PMF_Category
                 'parent_id'   => $thisParent_id,
                 'childs'      => $tabs,
                 'tree'        => $tree,
-                'description' => $thisdescription,
-                'active'      => $active
+                'description' => $thisdescription
             );
         }
 
@@ -466,6 +475,17 @@ class PMF_Category
         }
 
         return $childs;
+    }
+
+    /**
+     * number of childs of the $id
+     *
+     * @param  integer $id Category id
+     * @return integer
+     */
+    private function numChilds($id)
+    {
+        return count($this->getNodes($id));
     }
 
     /**
@@ -702,7 +722,6 @@ class PMF_Category
         $ret[1] = $this->treeTab[$y]["name"];
         $ret[2] = $this->treeTab[$y]["id"];
         $ret[3] = $this->treeTab[$y]["description"];
-        $ret[4] = $this->treeTab[$y]["active"];
         return $ret;
     }
 
@@ -887,7 +906,7 @@ class PMF_Category
      * of associative arrays with the keys 'name', 'id', 'lang',
      * 'parent_id' and 'description'.
      *
-     * @param integer $articleId Record id
+     * @param integer $article_id Record id
      *
      * @return  array
      */
@@ -970,7 +989,7 @@ class PMF_Category
      */
     public function getCategoryUser($category_id)
     {
-        return $this->categories[$category_id]['user_id'];
+        return $this->categoryName[$category_id]['user_id'];
     }
 
     /**
@@ -1026,8 +1045,7 @@ class PMF_Category
             SET
                 name = '%s',
                 description = '%s',
-                user_id = %d,
-                active = %d
+                user_id = %d
             WHERE
                 id = %d
             AND
@@ -1036,45 +1054,11 @@ class PMF_Category
             $category_data['name'],
             $category_data['description'],
             $category_data['user_id'],
-            $category_data['active'],
             $category_data['id'],
             $category_data['lang']);
         $this->_config->getDb()->query($query);
 
         return true;
-    }
-
-    /**
-     * Returns the data of the given category
-     *
-     * @param integer $categoryId
-     *
-     * @return PMF_Entity_Category
-     */
-    public function getCategoryData($categoryId)
-    {
-        $entity = new PMF_Entity_Category();
-
-        $query = sprintf(
-            "SELECT * FROM %sfaqcategories WHERE id = %d AND lang = '%s'",
-            PMF_Db::getTablePrefix(),
-            $categoryId,
-            $this->language
-        );
-
-        $result = $this->_config->getDb()->query($query);
-
-        if ($row = $this->_config->getDb()->fetchObject($result)) {
-            $entity->setId($row->id)
-                ->setLang($row->lang)
-                ->setParentId($row->parent_id)
-                ->setName($row->name)
-                ->setDescription($row->description)
-                ->setUserId($row->user_id)
-                ->setActive($row->active);
-        }
-
-        return $entity;
     }
 
     /**

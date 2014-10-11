@@ -17,7 +17,6 @@
  * @since     2010-07-06
  */
 
-require_once dirname(dirname(__DIR__)) . '/phpmyfaq/inc/PMF/Search/Database/Sqlite3.php';
 require_once dirname(dirname(__DIR__)) . '/phpmyfaq/inc/PMF/Search/Factory.php';
 require_once dirname(dirname(__DIR__)) . '/phpmyfaq/inc/PMF/Language.php';
 require_once dirname(dirname(__DIR__)) . '/phpmyfaq/inc/PMF/String.php';
@@ -65,10 +64,10 @@ class PMF_Search_FactoryTest extends PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $search = PMF_Search_Factory::create($this->PMF_Configuration, array('database' => 'sqlite3'));
+        $search = PMF_Search_Factory::create($this->PMF_Configuration, array('database' => 'sqlite'));
 
-        $this->assertEquals(new PMF_Search_Database_Sqlite3($this->PMF_Configuration), $search);
-        $this->assertInstanceOf('PMF_Search_Database_Sqlite3', $search);
+        $this->assertEquals(new PMF_Search_Database_Sqlite($this->PMF_Configuration), $search);
+        $this->assertInstanceOf('PMF_Search_Database_Sqlite', $search);
     }
 
 }

@@ -64,23 +64,7 @@ if (in_array($user->getUserId(), $userPermission)) {
     $userPermission = false;
 }
 
-// get user rights
-$permission = array();
-if (isset($auth)) {
-    // read all rights, set them FALSE
-    $allRights = $user->perm->getAllRightsData();
-    foreach ($allRights as $right) {
-        $permission[$right['name']] = false;
-    }
-    // check user rights, set them TRUE
-    $allUserRights = $user->perm->getAllUserRights($user->getUserId());
-    foreach ($allRights as $right) {
-        if (in_array($right['right_id'], $allUserRights))
-            $permission[$right['name']] = true;
-    }
-}
-
-if ($attachment && ($groupPermission || ($groupPermission && $userPermission)) && $permission['dlattachment']) {
+if ($attachment && ($groupPermission || ($groupPermission && $userPermission))) {
     try {
         $attachment->rawOut();
         exit(0);

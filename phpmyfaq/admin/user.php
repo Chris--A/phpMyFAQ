@@ -59,7 +59,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
         if (!isset($_SESSION['phpmyfaq_csrf_token']) || $_SESSION['phpmyfaq_csrf_token'] !== $csrfToken) {
             $csrfOkay = false;
         }
-        if (0 === (int) $userId || !$csrfOkay) {
+        if ($userId === 0 && !$csrfOkay) {
             $message .= sprintf('<p class="alert alert-danger">%s</p>', $PMF_LANG['ad_user_error_noId']);
         } else {
             $user       = new PMF_User($faqConfig);
@@ -184,13 +184,11 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
         $userId     = PMF_Filter::filterInput(INPUT_POST, 'user_id', FILTER_VALIDATE_INT, 0);
         $csrfOkay   = true;
         $csrfToken  = PMF_Filter::filterInput(INPUT_POST, 'csrf', FILTER_SANITIZE_STRING);
-        $userAction = $defaultUserAction;
-
         if (!isset($_SESSION['phpmyfaq_csrf_token']) || $_SESSION['phpmyfaq_csrf_token'] !== $csrfToken) {
             $csrfOkay = false; 
         }
         $userAction = $defaultUserAction;
-        if (0 === (int) $userId || !$csrfOkay) {
+        if ($userId == 0 && !$csrfOkay) {
             $message .= sprintf('<p class="alert alert-danger">%s</p>', $PMF_LANG['ad_user_error_noId']);
         } else {
             if (!$user->getUserById($userId)) {
@@ -233,7 +231,6 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
         $user_password_confirm = PMF_Filter::filterInput(INPUT_POST, 'user_password_confirm', FILTER_SANITIZE_STRING, '');
         $csrfOkay              = true;
         $csrfToken             = PMF_Filter::filterInput(INPUT_POST, 'csrf', FILTER_SANITIZE_STRING);
-
         if (!isset($_SESSION['phpmyfaq_csrf_token']) || $_SESSION['phpmyfaq_csrf_token'] !== $csrfToken) {
             $csrfOkay = false; 
         }
@@ -309,7 +306,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
 
             <form class="form-horizontal" action="?action=user&amp;user_action=addsave" method="post" role="form"
                   accept-charset="utf-8">
-            <input type="hidden" name="csrf" value="<?php echo $user->getCsrfTokenFromSession(); ?>">
+            <input type="hidden" name="csrf" value="<?php echo $user->getCsrfTokenFromSession(); ?>" />
 
             <div class="form-group">
                 <label class="col-lg-2 control-label" for="user_name"><?php echo $PMF_LANG["ad_adus_name"]; ?></label>
@@ -448,7 +445,6 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
                         //<![CDATA[
                         var mappedIds,
                             userNames;
-                        /*
                         $('#user_list_autocomplete').typeahead({
                             source: function (query, process) {
                                 return $.get("index.php?action=ajax&ajax=user&ajaxaction=get_user_list", { q: query }, function (data) {
@@ -468,15 +464,14 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
                                 getUserRights(userId);
                             }
                         });
-                        */
                         //]]>
                         </script>
                     </div>
                     <div class="panel-footer">
                         <input type="hidden" id="user_list_select" name="user_list_select" value="">
-                            <button class="btn btn-danger" type="submit">
-                                <?php echo $PMF_LANG['ad_gen_delete']; ?>
-                            </button>
+                        <button class="btn btn-danger" type="submit">
+                            <?php echo $PMF_LANG['ad_gen_delete']; ?>
+                        </button>
                     </div>
                     </form>
                 </div>
@@ -489,8 +484,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
                     <form action="?action=user&amp;user_action=update_data" method="post" accept-charset="utf-8"
                           class="form-horizontal">
                         <div class="panel-body">
-                            <input id="update_user_id" type="hidden" name="user_id" value="0">
-                            <input type="hidden" name="csrf" value="<?php print $user->getCsrfTokenFromSession(); ?>">
+                            <input id="update_user_id" type="hidden" name="user_id" value="0" />
                             <div class="form-group">
                                 <label for="user_status_select" class="col-lg-3 control-label">
                                     <?php echo $PMF_LANG['ad_user_status']; ?>
@@ -525,9 +519,10 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
 
                             <ul class="list-group">
                                 <li class="list-group-item text-center">
-                                    <a class="btn btn-primary btn-sm" href="#" id="checkAll">
+                                    <a class="btn btn-primary btn-sm" href="javascript:formCheckAll('rightsForm')">
                                         <?php echo $PMF_LANG['ad_user_checkall']; ?>
-                                        /
+                                    </a>
+                                    <a class="btn btn-primary btn-sm" href="javascript:formUncheckAll('rightsForm')">
                                         <?php echo $PMF_LANG['ad_user_uncheckall']; ?>
                                     </a>
                                 </li>
@@ -535,8 +530,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
                                 <li class="list-group-item checkbox">
                                     <label>
                                     <input id="user_right_<?php echo $right['right_id']; ?>" type="checkbox"
-                                           name="user_rights[]" value="<?php echo $right['right_id']; ?>"
-                                           class="permission">
+                                           name="user_rights[]" value="<?php echo $right['right_id']; ?>"/>
                                 <?php
                                 if (isset($PMF_LANG['rightsLanguage'][$right['name']])) {
                                     echo $PMF_LANG['rightsLanguage'][$right['name']];
@@ -628,7 +622,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
         <?php
             $counter = $displayedCounter = 0;
             foreach ($allUsers as $userId) {
-                $user->getUserById($userId, true);
+                $user->getUserById($userId);
 
                 if ($displayedCounter >= $perPage) {
                     continue;
@@ -677,10 +671,9 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
                 </td>
                 <td>
                     <?php if ($user->getStatus() !== 'protected'): ?>
-                    <a href="javascript:;" onclick="deleteUser(this); return false;" class="btn btn-danger"
-                       data-csrf-token="<?php echo $user->getCsrfTokenFromSession() ?>"
-                       data-user-id="<?php echo $user->getUserData('user_id') ?>">
-                        <?php print $PMF_LANG['ad_user_delete'] ?>
+                    <a onclick="deleteUser(<?php echo $user->getUserData('user_id') ?>); return false;"
+                       href="javascript:;" class="btn btn-danger">
+                        <?php echo $PMF_LANG['ad_user_delete'] ?>
                     </a>
                     <?php endif; ?>
                 </td>
@@ -692,23 +685,23 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
         </table>
 
         <script type="text/javascript">
+        /* <![CDATA[ */
+
         /**
          * Ajax call to delete user
          *
          * @param userId
          */
-        function deleteUser(identifier) {
+        function deleteUser(userId) {
             if (confirm('<?php echo $PMF_LANG['ad_user_del_3'] ?>')) {
-                var csrf   = $(identifier).data('csrf-token');
-                var userId = $(identifier).data('user-id');
-
-                $.getJSON("index.php?action=ajax&ajax=user&ajaxaction=delete_user&user_id=" + userId + "&csrf=" + csrf,
-                    function(response) {
-                        $('#user_message').html(response);
-                        $('.row_user_id_' + userId).fadeOut('slow');
-                    });
+                $.getJSON("index.php?action=ajax&ajax=user&ajaxaction=delete_user&user_id=" + userId,
+                function(response) {
+                    $('#user_message').html(response);
+                    $('.row_user_id_' + userId).fadeOut('slow');
+                });
             }
         }
+
 
         /**
          * Ajax call to delete user
@@ -727,6 +720,7 @@ if ($user->perm->checkRight($user->getUserId(), 'edituser') ||
             }
         }
 
+        /* ]]> */
         </script>
 <?php 
     }

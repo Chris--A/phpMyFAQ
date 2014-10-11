@@ -63,16 +63,18 @@ if ($user->perm->checkRight($user->getUserId(), 'viewlog')) {
             <tr>
                 <td><?php echo $PMF_LANG["ad_sess_referer"]; ?></td>
                 <td>
-                    <?php echo PMF_String::htmlentities(str_replace("?", "? ", $data[5])); ?>
+                    <a href="<?php echo $data[5]; ?>" target="_blank">
+                        <?php echo str_replace("?", "? ", $data[5]); ?>
+                    </a>
                 </td>
             </tr>
             <tr>
                 <td><?php echo $PMF_LANG["ad_sess_browser"]; ?></td>
-                <td><?php echo PMF_String::htmlentities($data[6]); ?></td>
+                <td><?php echo $data[6]; ?></td>
             </tr>
             <tr>
                 <td><?php echo $PMF_LANG["ad_sess_ip"]; ?>:</td>
-                <td><?php echo PMF_String::htmlentities($data[3]); ?></td>
+                <td><?php echo $data[3]; ?></td>
             </tr>
 <?php
                 }

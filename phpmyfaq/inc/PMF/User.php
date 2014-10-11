@@ -252,12 +252,10 @@ class PMF_User
      * Loads basic user information from the database selecting the user with
      * specified user-ID.
      *
-     * @param  integer $userId            User ID
-     * @param  boolean $allowBlockedUsers Allow blocked users as well, e.g. in admin
-     *
+     * @param  integer $userId User ID
      * @return bool
      */
-    public function getUserById($userId, $allowBlockedUsers = false)
+    public function getUserById($userId)
     {
         $select = sprintf("
             SELECT
@@ -267,7 +265,7 @@ class PMF_User
             FROM
                 %sfaquser
             WHERE
-                user_id = %d " . ( $allowBlockedUsers ? '' : "AND account_status != 'blocked'"),
+                user_id = %d",
              PMF_Db::getTablePrefix(),
              (int) $userId);
              
@@ -282,7 +280,7 @@ class PMF_User
         $this->status  = (string)$user['account_status'];
         
         // get encrypted password
-        // @todo: Add a getEncPassword method to the Auth* classes for the (local and remote) Auth Sources.
+        // TODO: Add a getEncPassword method to the Auth* classes for the (local and remote) Auth Sources.
         if ('db' === $this->getAuthSource('name')) {
             $select = sprintf("
                 SELECT
@@ -371,7 +369,7 @@ class PMF_User
             FROM
                 %sfaquser
             WHERE
-                remember_me = '%s' AND account_status != 'blocked'",
+                remember_me = '%s'",
             PMF_Db::getTablePrefix(),
             $this->config->getDb()->escape($cookie)
         );
@@ -398,46 +396,6 @@ class PMF_User
         }
         $this->userdata->load($this->getUserId());
         return true;
-    }
-
-    /**
-     * Checks if display name is already used. Returns true, if already in use
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function checkDisplayName($name)
-    {
-        if (!$this->userdata instanceof PMF_User_UserData) {
-            $this->userdata = new PMF_User_UserData($this->config);
-        }
-
-        if ($name === $this->userdata->fetch('display_name', $name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Checks if email address is already used. Returns true, if already in use
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function checkMailAddress($name)
-    {
-        if (!$this->userdata instanceof PMF_User_UserData) {
-            $this->userdata = new PMF_User_UserData($this->config);
-        }
-
-        if ($name === $this->userdata->fetch('email', $name)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -762,7 +720,7 @@ class PMF_User
      * @param  string          $name Auth name
      * @return boolean
      */
-    public function addAuth(PMF_Auth $auth, $name)
+    public function addAuth($auth, $name)
     {
         if ($this->checkAuth($auth)) {
             $this->authContainer[$name] = $auth;
@@ -777,7 +735,7 @@ class PMF_User
      * @param  PMF_Auth $auth Auth object
      * @return bool
      */
-    protected function checkAuth(PMF_Auth $auth)
+    protected function checkAuth($auth)
     {
         $methods = array('checkPassword');
         foreach ($methods as $method) {

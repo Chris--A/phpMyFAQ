@@ -82,17 +82,16 @@ switch ($action) {
     case 'deleteglossary':
     case 'addglossary':
     case 'editglossary':
-    case 'news':
+    case 'news';
     case 'addnews':
     case 'editnews':
     case 'savenews':
-    case 'updatenews':
+    case 'updatenews';
     case 'delnews':
     case 'question':
     case 'takequestion':
     case 'comments':
     case 'attachments':
-    case 'tags':
         $secLevelHeader   = $PMF_LANG['admin_mainmenu_content'];
         $secLevelEntries .= $adminHelper->addMenuEntry('addcateg+editcateg+delcateg', 'category', 'ad_menu_categ_edit', $action);
         $secLevelEntries .= $adminHelper->addMenuEntry('addbt', 'editentry', 'ad_entry_add', $action);
@@ -103,7 +102,6 @@ switch ($action) {
         $secLevelEntries .= $adminHelper->addMenuEntry('addglossary+editglossary+delglossary', 'glossary', 'ad_menu_glossary', $action);
         $secLevelEntries .= $adminHelper->addMenuEntry('addnews+editnews+delnews', 'news', 'ad_menu_news_edit', $action);
         $secLevelEntries .= $adminHelper->addMenuEntry('addattachment+editattachment+delattachment', 'attachments', 'ad_menu_attachments', $action);
-        $secLevelEntries .= $adminHelper->addMenuEntry('editbt', 'tags', 'ad_entry_tags', $action);
         $dashboardPage    = false;
         $contentPage      = true;
         break;
@@ -181,7 +179,6 @@ switch ($action) {
     <meta name="application-name" content="phpMyFAQ <?php echo $faqConfig->get('main.currentVersion'); ?>">
     <meta name="copyright" content="(c) 2001-2014 phpMyFAQ Team">
     <meta name="publisher" content="phpMyFAQ Team">
-    <meta name="robots" content="<?php echo $faqConfig->get('seo.metaTagsAdmin') ?>">
     <meta name="MSSmartTagsPreventParsing" content="true">
 
     <link rel="stylesheet" href="assets/css/style.css?v=1">
@@ -202,7 +199,7 @@ switch ($action) {
 
 <div id="wrapper">
 
-    <nav class="navbar navbar-default navbar-static-top navbar-admin">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
                 <span class="sr-only">Toggle navigation</span>

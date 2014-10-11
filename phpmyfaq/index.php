@@ -452,8 +452,6 @@ if (is_null($error)) {
     $loginMessage = '<p class="error">' . $error . '</p>';
 }
 
-$faqSeo = new PMF_Seo($faqConfig);
-
 $tplMainPage = array(
     'msgLoginUser'         => $PMF_LANG['msgLoginUser'],
     'title'                => $faqConfig->get('main.titleFAQ') . $title,
@@ -466,15 +464,11 @@ $tplMainPage = array(
     'metaPublisher'        => $faqConfig->get('main.metaPublisher'),
     'metaLanguage'         => $PMF_LANG['metaLanguage'],
     'metaCharset'          => 'utf-8', // backwards compability
-    'metaRobots'           => $faqSeo->getMetaRobots($action),
     'phpmyfaqversion'      => $faqConfig->get('main.currentVersion'),
     'stylesheet'           => $PMF_LANG['dir'] == 'rtl' ? 'style.rtl' : 'style',
-    'currentPageUrl'       => preg_match( '/(\S+\/content\/\S+.html)\?\S*/', $currentPageUrl, $canonical ) === 1 ? $canonical[1] : $currentPageUrl,
+    'currentPageUrl'       => $currentPageUrl,
     'action'               => $action,
     'dir'                  => $PMF_LANG['dir'],
-    'writeSendAdress'      => '?' . $sids . 'action=search',
-    'searchBox'            => $PMF_LANG['msgSearch'],
-    'categoryId'           => ($cat === 0) ? '%' : (int)$cat,
     'headerCategories'     => $PMF_LANG['msgFullCategories'],
     'msgCategory'          => $PMF_LANG['msgCategory'],
     'msgExportAllFaqs'     => $PMF_LANG['msgExportAllFaqs'],
@@ -486,8 +480,6 @@ $tplMainPage = array(
                               $faqConfig->get('main.currentVersion'),
     'registerUser'         => '<a href="?action=register">' . $PMF_LANG['msgRegistration'] . '</a>',
     'sendPassword'         => '<a href="?action=password">' . $PMF_LANG['lostPassword'] . '</a>',
-    'msgFullName'          => $PMF_LANG['ad_user_loggedin'] . $user->getLogin(),
-    'msgLoginName'         => $user->getUserData('display_name'),
     'loginHeader'          => $PMF_LANG['msgLoginUser'],
     'loginMessage'         => $loginMessage,
     'writeLoginPath'       => $faqSystem->getSystemUri($faqConfig) . '?' . PMF_Filter::getFilteredQueryString(),
@@ -615,6 +607,8 @@ if (isset($auth)) {
         'userloggedIn',
         array(
             'msgUserControl'         => $adminSection,
+            'msgFullName'            => $PMF_LANG['ad_user_loggedin'] . $user->getLogin(),
+            'msgLoginName'           => $user->getUserData('display_name'),
             'msgUserControlDropDown' => '<a href="?action=ucp">' . $PMF_LANG['headerUserControlPanel'] . '</a>',
             'msgLogoutUser'          => '<a href="?action=logout">' . $PMF_LANG['ad_menu_logout'] . '</a>',
             'activeUserControl'      => ('ucp' == $action) ? 'active' : ''
@@ -702,7 +696,6 @@ if ('artikel' == $action || 'show' == $action || is_numeric($solutionId)) {
         'rightBox',
         'socialLinks',
         array(
-            'baseHref'               => $faqSystem->getSystemUri($faqConfig),
             'writePDFTag'            => $PMF_LANG['msgPDF'],
             'writePrintMsgTag'       => $PMF_LANG['msgPrintArticle'],
             'writeSend2FriendMsgTag' => $PMF_LANG['msgSend2Friend'],

@@ -12,7 +12,7 @@
     <meta name="author" content="{metaPublisher}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="application-name" content="phpMyFAQ {phpmyfaqversion}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="INDEX, FOLLOW">
     <meta name="revisit-after" content="7 days">
 
     <!-- Share on Facebook -->
@@ -25,8 +25,8 @@
     <link rel="apple-touch-icon" href="{baseHref}assets/template/{tplSetName}/apple-touch-icon.png">
     <link rel="canonical" href="{currentPageUrl}">
 
-    <script src="{baseHref}assets/js/modernizr.min.js"></script>
-    <script src="{baseHref}assets/js/phpmyfaq.min.js"></script>
+    <script src="assets/js/libs/modernizr.min.js"></script>
+    <script src="assets/js/phpmyfaq.min.js"></script>
 </head>
 <body dir="{dir}">
 

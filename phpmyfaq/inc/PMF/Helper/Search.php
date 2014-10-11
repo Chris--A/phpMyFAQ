@@ -264,7 +264,7 @@ class PMF_Helper_Search extends PMF_Helper
                 );
             }
             
-            $html .= "<ul class=\"phpmyfaq-search-results list-unstyled\">\n";
+            $html .= "<ul class=\"phpmyfaq-search-results\">\n";
 
             $counter = $displayedCounter = 0;
 
@@ -285,12 +285,11 @@ class PMF_Helper_Search extends PMF_Helper
                 $question      = PMF_Utils::chopString($result->question, 15);
                 $answerPreview = PMF_Utils::chopString(strip_tags($result->answer), 25);
                 $searchterm    = str_replace(
-                    ['^', '.', '?', '*', '+', '{', '}', '(', ')', '[', ']', '"'],
-                    '',
-                    $this->searchterm
-                );
-                $searchterm  = preg_quote($searchterm, '/');
-                $searchItems = explode(' ', $searchterm);
+                                    array('^', '.', '?', '*', '+', '{', '}', '(', ')', '[', ']', '"'), '', 
+                                    $this->searchterm
+                                    );
+                $searchterm    = preg_quote($searchterm, '/');
+                $searchItems   = explode(' ', $searchterm);
                 
                 if ($this->_config->get('search.enableHighlighting') && PMF_String::strlen($searchItems[0]) > 1) {
                     foreach ($searchItems as $item) {
